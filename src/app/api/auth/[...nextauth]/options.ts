@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { dbConnect } from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = { 
     providers: [
         CredentialsProvider({
             id: "credentials",
@@ -47,5 +47,25 @@ export const authOptions: NextAuthOptions = {
 
             }
         }),
-    ]
+    ],
+    callbacks: {
+        async jwt({token, user}){
+            // inject user data in token
+            // to reduce database querries while authentication
+            
+            return token 
+        },
+        async session({session, token}){
+            return session
+        }
+    },
+    pages: {
+        signIn : '/sign-in'
+    }, 
+    session: {
+        strategy: "jwt"
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+
+
 }
